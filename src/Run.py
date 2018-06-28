@@ -12,15 +12,18 @@ from report.performance_plot import PerformancePlot
 
 
 def main():
+    # ------------  NOTE  --------------
+    # oneHot does not work: It makes not sense to have binary labeled data (targetDigit or notTargetDigit), 
+    # but having a MLP with 10 output nodes and softmax function. It needs to be trained with digit labels, not binary ones!
     data = MNISTSeven("../data/mnist_seven.csv", 3000, 1000, 1000,
                                                     oneHot=False)
                                                     
     myMLPClassifier = MultilayerPerceptron(data.trainingSet,
                                         data.validationSet,
                                         data.testSet,
-                                        hiddenLayerSizes=[65,30],
-                                        learningRate=0.028,
-                                        epochs=50)
+                                        hiddenLayerSizes=[65,30], # size of hidden layers, input and output layers sizes are constant
+                                        learningRate=0.025, # learning rate
+                                        epochs=50) # epochs
                                                               
 
     # Train the classifiers

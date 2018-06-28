@@ -69,6 +69,23 @@ class MultilayerPerceptron(Classifier):
         # Build up the network from specific layers
         self.layers = []
 
+        self.inputWeights = inputWeights
+
+        # add bias values ("1"s) at the beginning of all data sets
+        self.trainingSet.input = np.insert(self.trainingSet.input, 0, 1,
+                                            axis=1)
+        self.validationSet.input = np.insert(self.validationSet.input, 0, 1,
+                                              axis=1)
+        self.testSet.input = np.insert(self.testSet.input, 0, 1, axis=1)
+
+        # no hidden layer
+        if not hiddenLayerSizes:
+            outputActivation = "softmax"
+            self.layers.append(LogisticLayer(train.input.shape[1], 10, 
+                           None, outputActivation, True))
+            return
+
+        # else...
         # Input layer
         inputActivation = "sigmoid"
         self.layers.append(LogisticLayer(train.input.shape[1], hiddenLayerSizes[0], 
@@ -84,19 +101,9 @@ class MultilayerPerceptron(Classifier):
         self.layers.append(LogisticLayer(hiddenLayerSizes[-1], 10, 
                            None, outputActivation, True))
 
-        self.inputWeights = inputWeights
-
         for layer in self.layers:
-            print(layer.nIn)
-            print(layer.nOut)
             print(layer.weights.shape)
 
-        # add bias values ("1"s) at the beginning of all data sets
-        self.trainingSet.input = np.insert(self.trainingSet.input, 0, 1,
-                                            axis=1)
-        self.validationSet.input = np.insert(self.validationSet.input, 0, 1,
-                                              axis=1)
-        self.testSet.input = np.insert(self.testSet.input, 0, 1, axis=1)
 
 
     def _get_layer(self, layer_index):
@@ -122,8 +129,8 @@ class MultilayerPerceptron(Classifier):
         """
         out = inp
         for layer in self.layers:
+            out = np.insert(out,0,1) # add bias coeff in front of data
             out = layer.forward(out)
-            out = np.insert(out,0,1) # add bias coeff to front
         
     def _compute_error(self, target):
         """
@@ -134,7 +141,7 @@ class MultilayerPerceptron(Classifier):
         ndarray :
             a numpy array (1,nOut) containing the output of the layer
         """
-        return self.loss.calculateDerivative(target, self.layers[-1].outp)
+        return self.loss.calculateDerivative(target, self.layers[-1].outp) # error of target and output
     
     def _update_weights(self, learningRate):
         """
@@ -182,19 +189,19 @@ class MultilayerPerceptron(Classifier):
 
             # Do a forward pass to calculate the output and the error, saves output at every neuron
             self._feed_forward(img)
-            # build target output: 10 output neurons, one is labeled with "1" depending on the labels
+            # build target output: 10 output neurons, one is labeled with "1" depending on the target digit (0..9)
             labelArr = np.zeros(10)
             labelArr[label] = 1.0
 
             # compute output error
             deltas = self._compute_error(labelArr)
-            # initial weights just output (as matrix for arithmetical reasons)
+            # initial weights just Identity (as matrix so can be handled in computeDerivative)
             wgts = np.identity(self.layers[-1].nOut)
 
             # backpropagate through layers, calculate new delta based on delta and weights of previous layer, dont forget to remove bias
             for layer in reversed(self.layers):
                 deltas = layer.computeDerivative(deltas, wgts)
-                wgts = np.delete(layer.weights,0,0)
+                wgts = np.delete(layer.weights,0,0) # remove bias to use weight matrix with deltas
 
             # Update weights in the online learning fashion
             self._update_weights(self.learningRate)
