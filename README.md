@@ -1,24 +1,10 @@
 # NNPraktikum
-The coding framework for KIT Neural Network Praktikum
+Built on top of the coding framework for KIT Neural Network Praktikum
+See https://github.com/thanhleha-kit/NNPraktikum
 
-See [ilias.studium.kit.edu](https://ilias.studium.kit.edu/goto_produktiv_crs_413999.html)
-for more information.
+NOTE: oneHot is not supported because it does not make really sense in the context of this MLP. Since the given output layer has size 10 and we should use the softmax function, it does not make sense to train the MLP with binary data (target digit or not), instead train it with the labeled digit itself.
+When running the network, the first 30 target labels and network outputs are printed for visual comparision (verbose).
 
 ## Python version
-We use Python 2.7, not Python 3.x
+Built on python 2.7
 
-## Requirements
-
-You have to install two 3rd-party packages: Numpy and scikit-learn.
-
-### Numpy
-
-You might have to install numpy manually. Please follow the
-[official guide](http://docs.scipy.org/doc/numpy/user/install.html) to do so.
-
-### Scikit-learn
-
-Scikit-learn is also called sklearn. Don't be confused by that, it is the same
-package. Please follow the
-[official guide](http://scikit-learn.org/stable/install.html) to
-install it.
