@@ -13,8 +13,8 @@ from report.performance_plot import PerformancePlot
 
 def main():
     # ------------  NOTE  --------------
-    # oneHot does not work: It makes not sense to have binary labeled data (targetDigit or notTargetDigit), 
-    # but having a MLP with 10 output nodes and softmax function. It needs to be trained with digit labels, not binary ones!
+    # oneHot = False, as the framwork provided implements binary one-hot encoding (is it a 7 = True/False)  
+    # Our targets are one-of-k encoded (e.g. 1= (0,1,0,0,0,0,0,0,0)). Network predicts the exact number on the picture not just 7 = True/False
     data = MNISTSeven("../data/mnist_seven.csv", 3000, 1000, 1000,
                                                     oneHot=False)
                                                     
