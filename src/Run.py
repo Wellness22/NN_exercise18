@@ -22,7 +22,7 @@ def main():
                                         data.validationSet,
                                         data.testSet,
                                         hiddenLayerSizes=[65,30], # size of hidden layers, input and output layers sizes are constant
-                                        learningRate=0.025, # learning rate
+                                        learningRate=0.028, # learning rate
                                         epochs=50) # epochs
                                                               
 

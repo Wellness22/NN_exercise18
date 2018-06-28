@@ -71,36 +71,35 @@ class MultilayerPerceptron(Classifier):
 
         self.inputWeights = inputWeights
 
-        # add bias values ("1"s) at the beginning of all data sets
-        self.trainingSet.input = np.insert(self.trainingSet.input, 0, 1,
-                                            axis=1)
-        self.validationSet.input = np.insert(self.validationSet.input, 0, 1,
-                                              axis=1)
-        self.testSet.input = np.insert(self.testSet.input, 0, 1, axis=1)
-
         # no hidden layer
         if not hiddenLayerSizes:
             outputActivation = "softmax"
             self.layers.append(LogisticLayer(train.input.shape[1], 10, 
                            None, outputActivation, True))
             return
-
-        # else...
-        # Input layer
-        inputActivation = "sigmoid"
-        self.layers.append(LogisticLayer(train.input.shape[1], hiddenLayerSizes[0], 
+        else:
+            # Input layer
+            inputActivation = "sigmoid"
+            self.layers.append(LogisticLayer(train.input.shape[1], hiddenLayerSizes[0], 
                            None, inputActivation, False))
 
-        # Hidden Layers
-        for idx,sz in enumerate(hiddenLayerSizes[:-1]):
-            self.layers.append(LogisticLayer(hiddenLayerSizes[idx], hiddenLayerSizes[idx+1], 
+            # Hidden Layers
+            for idx,sz in enumerate(hiddenLayerSizes[:-1]):
+                self.layers.append(LogisticLayer(hiddenLayerSizes[idx], hiddenLayerSizes[idx+1], 
                            None, inputActivation, False))
 
-        # Output layer
-        outputActivation = "softmax"
-        self.layers.append(LogisticLayer(hiddenLayerSizes[-1], 10, 
+            # Output layer
+            outputActivation = "softmax"
+            self.layers.append(LogisticLayer(hiddenLayerSizes[-1], 10, 
                            None, outputActivation, True))
 
+
+        # add bias values ("1"s) at the beginning of all data sets
+        self.trainingSet.input = np.insert(self.trainingSet.input, 0, 1,
+                                            axis=1)
+        self.validationSet.input = np.insert(self.validationSet.input, 0, 1,
+                                              axis=1)
+        self.testSet.input = np.insert(self.testSet.input, 0, 1, axis=1)
 
 
 
@@ -127,8 +126,9 @@ class MultilayerPerceptron(Classifier):
         """
         out = inp
         for layer in self.layers:
-            out = np.insert(out,0,1) # add bias coeff in front of data
             out = layer.forward(out)
+            out = np.insert(out,0,1) # add bias coeff in front of data
+            
         
     def _compute_error(self, target):
         """
