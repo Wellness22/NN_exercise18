@@ -101,8 +101,6 @@ class MultilayerPerceptron(Classifier):
         self.layers.append(LogisticLayer(hiddenLayerSizes[-1], 10, 
                            None, outputActivation, True))
 
-        for layer in self.layers:
-            print(layer.weights.shape)
 
 
 
@@ -164,12 +162,12 @@ class MultilayerPerceptron(Classifier):
             if verbose:
                 print("Training epoch {0}/{1}.."
                       .format(epoch + 1, self.epochs))
-                print(str(self.validationSet.label[:30]) + "... labels")
-                print(str(np.array(self.evaluate(self.validationSet)[:30])) + "... outputs")
 
             self._train_one_epoch()
 
             if verbose:
+                print(str(self.validationSet.label[:30]) + "... labels")
+                print(str(np.array(self.evaluate(self.validationSet)[:30])) + "... outputs")
                 accuracy = accuracy_score(self.validationSet.label,
                                           self.evaluate(self.validationSet))
                 # Record the performance of each epoch for later usages
